@@ -17,8 +17,11 @@ export class User {
     @Prop()
     birthDate: Date
 
-    @Prop({default: "active"})
+    @Prop({default: "active", enum: ["active","inactive"]})
     status: string;
+
+    @Prop({enum: ["user","admin"]})
+    role: string;
 
     @Prop({default: false})
     deleted: boolean;
