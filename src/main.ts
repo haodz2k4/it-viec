@@ -1,10 +1,14 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { VersioningType } from '@nestjs/common';
+import { TransformInterceptor } from './common/interceptors/transfrom-response.interceptor';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  //Transform Interceptor 
+  const reflector = app.get(Reflector)
+  app.useGlobalInterceptors(new TransformInterceptor(reflector))
   //versioning
   app.setGlobalPrefix('api')
   app.enableVersioning({
