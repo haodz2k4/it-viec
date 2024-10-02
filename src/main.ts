@@ -6,7 +6,7 @@ import { TransformInterceptor } from './common/interceptors/transfrom-response.i
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-    
+  
   //Transform Interceptor 
   const reflector = app.get(Reflector)
   app.useGlobalInterceptors(new TransformInterceptor(reflector))
