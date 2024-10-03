@@ -1,35 +1,50 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, UsePipes } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IsValidateObjectId } from 'src/common/pipes/validation.pipe';
+import { ApiBody, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from './schema/user.schema';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new user' })
+  @ApiBody({type: CreateUserDto})
+  @ApiCreatedResponse({type: User})
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get All User' })
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', IsValidateObjectId) id: string) {
-    return this.usersService.findOneById(id);
+  @ApiOperation({summary: 'Find user by id'})
+  async findOne(@Param('id', IsValidateObjectId) id: string) {
+    const user = await this.usersService.findOneById(id);
+    if(!user){
+      throw new NotFoundException("User is not found")
+    }
+    return user
   }
 
   @Patch(':id')
+  @ApiOperation({summary: 'Update user by id'})
+  @ApiBody({type: UpdateUserDto})
   update(@Param('id', IsValidateObjectId) id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({summary: 'Remove user by id'})
   async remove(@Param('id', IsValidateObjectId) id: string) {
     const infoUpdate = await this.usersService.remove(id);
     if(infoUpdate.matchedCount != 1 || infoUpdate.modifiedCount != 1){
