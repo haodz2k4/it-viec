@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, UsePipes } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { IsValidateObjectId } from 'src/common/pipes/validation.pipe';
 
 @Controller('users')
 export class UsersController {
@@ -18,18 +19,18 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', IsValidateObjectId) id: string) {
     return this.usersService.findOneById(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id', IsValidateObjectId) id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id', IsValidateObjectId) id: string) {
     const infoUpdate = await this.usersService.remove(id);
     if(infoUpdate.matchedCount != 1 || infoUpdate.modifiedCount != 1){
       throw new NotFoundException("User is not found")
