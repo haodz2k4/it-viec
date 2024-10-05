@@ -13,7 +13,7 @@ export class UsersService {
 
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto){
     return await this.userModel.create(createUserDto);
   }
 
@@ -27,7 +27,7 @@ export class UsersService {
     const sortOrder = order === "asc" ? 1 : -1; 
     const sortOptions: Record<string, 1 | -1> = {}
     sortOptions[sortBy] = sortOrder
-    
+
     const [users, totalItems] = await Promise.all([
       this.userModel
       .find({...filter,deleted: false})

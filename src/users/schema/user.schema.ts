@@ -1,7 +1,8 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 import { ApiProperty } from "@nestjs/swagger";
 import { HydratedDocument } from "mongoose";
-
+import {hash} from "bcrypt"
+import { ConfigService } from "@nestjs/config";
 export type userDocument = HydratedDocument<User>;
 @Schema({timestamps: true})
 export class User {
@@ -36,3 +37,11 @@ export class User {
 }
 
 export const userSchema = SchemaFactory.createForClass(User);
+
+userSchema.pre('save', async function(next) {
+    if(this.isModified('password')){
+        const configService = new ConfigService()
+        this.password = await hash(this.password,parseInt(configService.get<string>('BCRYPT_SALT_ROUNDS'))) 
+    }
+    next()
+})
