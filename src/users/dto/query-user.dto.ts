@@ -1,59 +1,36 @@
 import { Transform, Type } from "class-transformer";
-import { IsIn, IsInt, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
-import { User } from "../schema/user.schema";
-
-
+import { IsEnum, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
+import { SortOrder } from "src/utils/types/sort.type";
 export class FilterUserDto {
-    @IsString()
-    @IsIn(["inactive","inactive"])
-    status: string;
-
-    @IsString()
-    @IsIn(["user","role"])
-    role: string;
-
-    @Transform(({value}) => parseInt(value))
-    @IsInt()
-    @IsNumber()
-    @Min(0)
-    minAge: number;
-    
-    @Transform(({value}) => parseInt(value))
-    @IsInt()
-    @IsNumber()
-    @Max(100)
-    maxAge: number;
+     //Filter 
+     @IsString()
+     @IsOptional()
+     @IsIn(["active","inactive"])
+     status?: string;
+ 
+     @IsString()
+     @IsOptional()
+     @IsIn(["user","role"])
+     role?: string;
 }
-
-export class SortUserDto {
-    @IsString()
-    orderBy: keyof User;
-
-    @IsString()
-    @IsIn(["asc","desc"])
-    order: string;
-}
-export class QueryUserDto {
-    
-    @IsNumber()
-    @IsOptional()
-    @IsInt()
-    @Min(1)
-    page: number;
+export class QueryUserDto extends FilterUserDto {
 
     @IsNumber()
     @IsOptional()
-    @IsInt()
-    @Max(100)
-    limit: number;
+    @Type(() => Number)
+    page?: number;
     
-    @ValidateNested()
     @IsOptional()
-    @Type(() => FilterUserDto)
-    filter: FilterUserDto
+    @IsNumber()
+    @Type(() => Number)
+    limit?: number
+    //sort 
+    @IsOptional()
+    @IsString()
+    sortBy?: string;
 
-    @ValidateNested()
     @IsOptional()
-    @Type(() => SortUserDto)
-    sort: SortUserDto
+    @IsEnum(SortOrder)
+    @Transform(({ value }) => value.toLowerCase())
+    order?: SortOrder;
 }

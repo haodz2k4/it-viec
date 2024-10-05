@@ -4,6 +4,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
+import { QueryUserDto, FilterUserDto } from './dto/query-user.dto';
+import { filterFalsyValues } from 'src/utils/filter-obj.util';
+import { SortOrder } from 'src/utils/types/sort.type';
 
 @Injectable()
 export class UsersService {
@@ -14,10 +17,39 @@ export class UsersService {
     return await this.userModel.create(createUserDto);
   }
 
-  async findAll() {
-    return await this.userModel.find({deleted: false})
-  }
+  async getUsers(queryUserDto: QueryUserDto) {
+    const {page = 1, limit = 50, sortBy = 'createdAt', order = SortOrder.DESC} = queryUserDto
+    const {status, role} = queryUserDto
+    const filter = filterFalsyValues({status, role});
+    //Skip
+    const skip = (page - 1) * limit;
+    //Sort Order
+    const sortOrder = order === "asc" ? 1 : -1; 
+    const sortOptions: Record<string, 1 | -1> = {}
+    sortOptions[sortBy] = sortOrder
+    
+    const [users, totalItems] = await Promise.all([
+      this.userModel
+      .find({...filter,deleted: false})
+      .skip(skip)
+      .limit(limit)
+      .sort(sortOptions),
+      this.getTotalItems(filter)
+    ])
+    const totalPages = Math.ceil(totalItems / limit)
+    const meta = {
+      totalItems,
+      itemCount: users.length,
+      itemsPerPage: limit,
+      totalPages,
+      currentPage: page
+    }
+    return {items: users, meta}
 
+  }
+  async getTotalItems(filter: FilterUserDto):Promise<number> {
+    return await this.userModel.countDocuments({...filter,deleted: false})
+  }
   async findOneById(id: string) {
     return await this.userModel.findOne({_id: id})
   }
