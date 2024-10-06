@@ -51,9 +51,14 @@ export class UsersService {
     return await this.userModel.countDocuments({...filter,deleted: false})
   }
   async findOneById(id: string) {
-    return await this.userModel.findOne({_id: id})
+    return await this.userModel.findOne({_id: id, deleted: false})
   }
-
+  async findOneByEmail(email: string) {
+    return await this.userModel
+      .findOne({email, deleted: false})
+      .select("+password")
+  }
+  
   async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.findOneById(id);
     if(!user){

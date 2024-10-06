@@ -1,10 +1,15 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 import { ApiProperty } from "@nestjs/swagger";
 import { HydratedDocument } from "mongoose";
-import {hash} from "bcrypt"
+import {hash, compare} from "bcrypt"
 import { ConfigService } from "@nestjs/config";
 export type userDocument = HydratedDocument<User>;
-@Schema({timestamps: true})
+@Schema({timestamps: true, toJSON: {
+    transform: function(doc, ret) {
+        delete ret.password;
+        return ret 
+    }
+}})
 export class User {
 
     @ApiProperty()
@@ -34,6 +39,10 @@ export class User {
     @ApiProperty()
     @Prop({default: false})
     deleted: boolean;
+
+    async isMatchPassword(password: string): Promise<boolean> {
+        return await compare(password, this.password)
+    }
 }
 
 export const userSchema = SchemaFactory.createForClass(User);
@@ -45,3 +54,5 @@ userSchema.pre('save', async function(next) {
     }
     next()
 })
+//https://mongoosejs.com/docs/advanced_schemas.html
+userSchema.loadClass(User)
