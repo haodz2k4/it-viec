@@ -1,6 +1,6 @@
-import { Expose } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 import { IsNumber, IsString } from "class-validator";
-
+@Exclude()
 export class TokenResDto {
     @Expose()
     @IsString()
@@ -10,6 +10,7 @@ export class TokenResDto {
     @IsString()
     refresh_token: string;
 }
+@Exclude()
 export class LoginResDto extends TokenResDto{
 
     @Expose()

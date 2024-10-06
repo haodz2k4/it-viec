@@ -7,13 +7,14 @@ import { Model } from 'mongoose';
 import { QueryUserDto, FilterUserDto } from './dto/query-user.dto';
 import { filterFalsyValues } from 'src/utils/filter-obj.util';
 import { SortOrder } from 'src/utils/types/sort.type';
+import { RegisterReqDto } from 'src/auth/dto/register-req.dto';
 
 @Injectable()
 export class UsersService {
 
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async create(createUserDto: CreateUserDto){
+  async create(createUserDto: CreateUserDto | RegisterReqDto){
     return await this.userModel.create(createUserDto)
   }
 

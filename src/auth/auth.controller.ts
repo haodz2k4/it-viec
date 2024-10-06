@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { Public } from 'src/decorator/public.decorator';
 import { ResponseMessage } from 'src/decorator/transfrom-response.decorate';
 import { LoginResDto } from './dto/login-res.dto';
+import { RegisterReqDto } from './dto/register-req.dto';
 @Controller('auth')
 export class AuthController {
 
@@ -15,5 +16,12 @@ export class AuthController {
     login(@Body() loginAuthDto: LoginReqDto): Promise<LoginResDto> {
         const {email, password} = loginAuthDto;
         return this.authService.login(email, password);
+    }
+
+    @Post('register')
+    @Public()
+    @ResponseMessage('Register')
+    register(@Body() registerReqDto: RegisterReqDto) {
+        return this.authService.register(registerReqDto)
     }
 }

@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { LoginResDto, TokenResDto } from './dto/login-res.dto';
 import { ConfigService } from '@nestjs/config';
+import { RegisterReqDto } from './dto/register-req.dto';
 
 @Injectable()
 export class AuthService {
@@ -35,5 +36,9 @@ export class AuthService {
                 expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRE') 
             })
         } 
+    }
+
+    async register(registerReqDto: RegisterReqDto){
+        return await this.userService.create(registerReqDto);
     }
 }

@@ -33,7 +33,7 @@ export class User {
     status: string;
 
     @ApiProperty()
-    @Prop({enum: ["user","admin"]})
+    @Prop({enum: ["user","admin"], default: "user"})
     role: string;
 
     @ApiProperty()
