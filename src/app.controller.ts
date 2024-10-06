@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ResponseMessage } from './common/decorator/transfrom-response.decorate';
+import { ResponseMessage } from './decorator/transfrom-response.decorate';
 
 @Controller()
 export class AppController {

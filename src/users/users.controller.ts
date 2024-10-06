@@ -6,7 +6,7 @@ import { IsValidateObjectId } from 'src/common/pipes/validation.pipe';
 import { ApiBody, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './schema/user.schema';
 import { QueryUserDto } from './dto/query-user.dto';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { Public } from 'src/decorator/public.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -22,7 +22,7 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(AuthGuard)
+  @Public()
   @ApiOperation({ summary: 'Get All User' })
   getUsers(@Query() queryUserDto: QueryUserDto) {
     return this.usersService.getUsers(queryUserDto);
