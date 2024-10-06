@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Query, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,6 +6,7 @@ import { IsValidateObjectId } from 'src/common/pipes/validation.pipe';
 import { ApiBody, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './schema/user.schema';
 import { QueryUserDto } from './dto/query-user.dto';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @ApiTags('Users')
 @Controller('users')
@@ -21,6 +22,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Get All User' })
   getUsers(@Query() queryUserDto: QueryUserDto) {
     return this.usersService.getUsers(queryUserDto);
