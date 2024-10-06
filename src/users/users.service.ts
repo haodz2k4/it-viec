@@ -14,7 +14,7 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async create(createUserDto: CreateUserDto){
-    return await this.userModel.create(createUserDto);
+    return await this.userModel.create(createUserDto)
   }
 
   async getUsers(queryUserDto: QueryUserDto) {
