@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { LoginReqDto } from './dto/login-req.dto';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorator/public.decorator';
@@ -11,14 +11,15 @@ export class AuthController {
     constructor(private authService: AuthService) {}
 
     @Post('login')
+    @HttpCode(HttpStatus.OK)
     @Public()
     @ResponseMessage("Login")
     login(@Body() loginAuthDto: LoginReqDto): Promise<LoginResDto> {
         const {email, password} = loginAuthDto;
         return this.authService.login(email, password);
     }
-
     @Post('register')
+    @HttpCode(HttpStatus.OK)
     @Public()
     @ResponseMessage('Register')
     register(@Body() registerReqDto: RegisterReqDto) {

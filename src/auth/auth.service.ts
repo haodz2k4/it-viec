@@ -22,6 +22,8 @@ export class AuthService {
         const {id, role} = user 
         const payload = {sub: id, email, role: role}
         const token = await this.generateAuthToken(payload);
+        const {refresh_token} = token;
+        await this.userService.update(id,{refreshToken: refresh_token})
         return {
             _id: id,
             ...token,
@@ -37,7 +39,7 @@ export class AuthService {
             })
         } 
     }
-
+    
     async register(registerReqDto: RegisterReqDto){
         return await this.userService.create(registerReqDto);
     }
