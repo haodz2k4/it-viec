@@ -40,10 +40,6 @@ export class User {
     @Prop({default: false})
     deleted: boolean;
 
-    @ApiProperty()
-    @Prop()
-    refreshToken: string;
-
     async isMatchPassword(password: string): Promise<boolean> {
         return await compare(password, this.password)
     }

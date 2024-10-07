@@ -5,7 +5,7 @@ import { Public } from 'src/decorator/public.decorator';
 import { ResponseMessage } from 'src/decorator/transfrom-response.decorate';
 import { LoginResDto } from './dto/login-res.dto';
 import { RegisterReqDto } from './dto/register-req.dto';
-import { CookieResponseInterceptor } from 'src/guards/cookie.guard';
+import { CookieResponseInterceptor } from 'src/interceptors/cookie.interceptor';
 @Controller('auth')
 export class AuthController {
 
