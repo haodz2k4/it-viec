@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,7 +6,8 @@ import { IsValidateObjectId } from 'src/common/pipes/validation.pipe';
 import { ApiBody, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './schema/user.schema';
 import { QueryUserDto } from './dto/query-user.dto';
-import { Public } from 'src/decorator/public.decorator';
+import { UserRequest } from 'src/decorator/user.decorator';
+import { ResponseMessage } from 'src/decorator/transfrom-response.decorate';
 
 @ApiTags('Users')
 @Controller('users')
@@ -22,10 +23,15 @@ export class UsersController {
   }
 
   @Get()
-  @Public()
   @ApiOperation({ summary: 'Get All User' })
   getUsers(@Query() queryUserDto: QueryUserDto) {
     return this.usersService.getUsers(queryUserDto);
+  }
+
+  @Get('me')
+  @ResponseMessage("Get current user")
+  async me(@UserRequest() user) {
+    return user 
   }
 
   @Get(':id')

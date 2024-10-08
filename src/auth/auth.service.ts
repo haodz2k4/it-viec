@@ -19,8 +19,8 @@ export class AuthService {
         if(!user || !user.isMatchPassword(password)){
             throw new UnauthorizedException("Invalid email or password");
         }
-        const {id, role} = user 
-        const payload = {sub: id, email, role: role}
+        const {id, role, fullName} = user 
+        const payload = {sub: id, email, role, fullName}
         const token = await this.generateAuthToken(payload);
         return {
             _id: id,
