@@ -14,7 +14,11 @@ async function bootstrap() {
   //Transform Interceptor 
   const reflector = app.get(Reflector)
   app.useGlobalInterceptors(new TransformInterceptor(reflector))
-  app.useGlobalPipes(new ValidationPipe({transform: true}))
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true, //Accept to transfrom value
+    whitelist: true, //Accept only field in Data transfer object
+    forbidNonWhitelisted: true, //throw error 
+  }))
   const configService = app.get(ConfigService)
   //versioning
   app.setGlobalPrefix('api')
