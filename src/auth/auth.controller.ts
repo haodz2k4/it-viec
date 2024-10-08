@@ -7,6 +7,8 @@ import { LoginResDto } from './dto/login-res.dto';
 import { RegisterReqDto } from './dto/register-req.dto';
 import { CookieResponseInterceptor } from 'src/interceptors/cookie.interceptor';
 import { Response } from 'express';
+import refreshTokenDecorator from 'src/decorator/refresh-token.decorator';
+import { RefreshResDto } from './dto/refresh-res.dto';
 @Controller('auth')
 export class AuthController {
 
@@ -26,6 +28,12 @@ export class AuthController {
     logout(@Res() res: Response){
         res.clearCookie("refresh_token");
         res.status(200).json({message: "Logout successfully"})
+    }
+
+    @Post('refresh-token')
+    @UseInterceptors(CookieResponseInterceptor)
+    refreshToken(@refreshTokenDecorator() refreshToken: string):Promise<RefreshResDto> {
+        return this.authService.refreshToken(refreshToken)
     }
 
     @Post('register')
