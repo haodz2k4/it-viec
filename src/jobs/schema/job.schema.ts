@@ -9,7 +9,7 @@ export class Job {
 
     //employerId 
     //categoryId 
-    @Prop({minlength: 3, maxlength: 20, required: true})
+    @Prop({minlength: 3, maxlength: 200, required: true})
     title: string;
 
     @Prop({required: true})
@@ -27,8 +27,8 @@ export class Job {
     @Prop()
     salaryRange: string;
 
-    
-    @Prop({enum: ['fresher', 'mid', 'senior','intern']})
+
+    @Prop({enum: ['fresher', 'mid', 'senior','intern'], required: true})
     experienceLevel: string;
 }
 

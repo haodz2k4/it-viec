@@ -13,6 +13,12 @@ async function bootstrap() {
   app.use(cookieParser())
   //Transform Interceptor 
   const reflector = app.get(Reflector)
+  //versioning
+  app.setGlobalPrefix('api')
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1'
+  })
   app.useGlobalInterceptors(new TransformInterceptor(reflector))
   app.useGlobalPipes(new ValidationPipe({
     transform: true, //Accept to transfrom value
@@ -20,12 +26,6 @@ async function bootstrap() {
     forbidNonWhitelisted: true, //throw error 
   }))
   const configService = app.get(ConfigService)
-  //versioning
-  app.setGlobalPrefix('api')
-  app.enableVersioning({
-    type: VersioningType.URI,
-    defaultVersion: '1'
-  })
   //Swagger
   const config = new DocumentBuilder()
     .setTitle('Cats example')

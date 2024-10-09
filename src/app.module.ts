@@ -10,6 +10,7 @@ import { JobsModule } from './jobs/jobs.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}), 
+    JobsModule,
     UsersModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -19,7 +20,6 @@ import { JobsModule } from './jobs/jobs.module';
       inject: [ConfigService],
     }),
     AuthModule,
-    JobsModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -9,8 +9,8 @@ import { Model } from 'mongoose';
 export class JobsService {
 
   constructor(@InjectModel(Job.name) private jobModel: Model<Job>) {}
-  create(createJobDto: CreateJobDto) {
-    return 'This action adds a new job';
+  async create(createJobDto: CreateJobDto) {
+    return await this.jobModel.create(createJobDto)
   }
 
   findAll() {
