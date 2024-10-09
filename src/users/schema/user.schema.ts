@@ -17,6 +17,10 @@ export class User {
     fullName: string;
 
     @ApiProperty()
+    @Prop()
+    avatar: string;
+
+    @ApiProperty()
     @Prop({required: true, unique: true})
     email: string;
 
