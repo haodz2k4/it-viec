@@ -4,6 +4,9 @@ import { UpdateJobDto } from './dto/update-job.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Job } from './schema/job.schema';
 import { Model } from 'mongoose';
+import { FilterJobDto, QueryJobDto } from './dto/query-job.dto';
+import { IPaginationResponse } from 'src/utils/types/pagination';
+import { filterFalsyValues } from 'src/utils/filter-obj.util';
 
 @Injectable()
 export class JobsService {
@@ -13,8 +16,36 @@ export class JobsService {
     return await this.jobModel.create(createJobDto)
   }
 
-  async findAll() {
-    return await this.jobModel.find({deleted: false})
+  async findAll(queryJobDto: QueryJobDto) {
+    const {page = 1, limit = 30, sortBy = 'createdAt', order = 'desc'} = queryJobDto;
+    const skip = (page - 1) * limit;
+    //Filter 
+    const {jobType, experienceLevel} = queryJobDto;
+    const filter = filterFalsyValues({jobType, experienceLevel});
+
+    const [products, totalItems] = await Promise.all([
+    this.jobModel
+      .find({...filter, deleted: false})
+      .limit(limit)
+      .skip(skip)
+      .sort({[sortBy]: order}),
+      this.getTotalDocument(filter)
+    ],)
+    const totalPages = Math.ceil(totalItems / limit)
+    const meta: IPaginationResponse = {
+      totalItems,
+      itemCount: products.length,
+      itemsPerPage: limit,
+      totalPages,
+      currentPage: page
+    }
+    return {
+      items: products,
+      meta
+    }
+  }
+  async getTotalDocument(filter: FilterJobDto):Promise<number> {
+    return await this.jobModel.countDocuments({...filter, deleted: false});
   }
 
   async findOneById(id: string) {

@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IsValidateObjectId } from 'src/common/pipes/validation.pipe';
+import { QueryJobDto } from './dto/query-job.dto';
 
 @Controller('jobs')
 @ApiTags('jobs')
@@ -16,8 +17,8 @@ export class JobsController {
   }
 
   @Get()
-  findAll() {
-    return this.jobsService.findAll();
+  findAll(@Query() queryJobDto: QueryJobDto) {
+    return this.jobsService.findAll(queryJobDto);
   }
 
   @Get(':id')

@@ -8,6 +8,7 @@ import { QueryUserDto, FilterUserDto } from './dto/query-user.dto';
 import { filterFalsyValues } from 'src/utils/filter-obj.util';
 import { SortOrder } from 'src/utils/types/sort.type';
 import { RegisterReqDto } from 'src/auth/dto/register-req.dto';
+import { IPaginationResponse } from 'src/utils/types/pagination';
 
 @Injectable()
 export class UsersService {
@@ -38,7 +39,7 @@ export class UsersService {
       this.getTotalItems(filter)
     ])
     const totalPages = Math.ceil(totalItems / limit)
-    const meta = {
+    const meta: IPaginationResponse = {
       totalItems,
       itemCount: users.length,
       itemsPerPage: limit,

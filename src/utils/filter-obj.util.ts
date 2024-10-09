@@ -9,7 +9,7 @@
     fullName: "Son Hao"
  }
 */
-export const filterFalsyValues = (obj: Record<string, any>) => {
+export const filterFalsyValues = <T>(obj: T): T => {
     const objItems = Object.entries(obj)
     return objItems.reduce((result, item) => {
         const [key, value] = item;
@@ -17,5 +17,5 @@ export const filterFalsyValues = (obj: Record<string, any>) => {
             result[key] = value
         }
         return result
-    }, {})
+    }, {} as T)
 } 
