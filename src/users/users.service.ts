@@ -20,22 +20,33 @@ export class UsersService {
   }
 
   async getUsers(queryUserDto: QueryUserDto) {
-    const {page = 1, limit = 50, sortBy = 'createdAt', order = SortOrder.DESC} = queryUserDto
-    const {status, role} = queryUserDto
+    const {
+      page = 1, 
+      limit = 50, 
+      sortBy = 'createdAt', 
+      order = SortOrder.DESC,
+      selectFields = ""
+    } = queryUserDto
+    //Filter
+    const {status, role, keyword, searchBy = "fullName"} = queryUserDto
     const filter = filterFalsyValues({status, role});
+    if(keyword){
+      filter[searchBy] = new RegExp(keyword, "i") 
+    }
     //Skip
     const skip = (page - 1) * limit;
     //Sort Order
     const sortOrder = order === "asc" ? 1 : -1; 
     const sortOptions: Record<string, 1 | -1> = {}
     sortOptions[sortBy] = sortOrder
-
+    console.log(filter)
     const [users, totalItems] = await Promise.all([
       this.userModel
       .find({...filter,deleted: false})
       .skip(skip)
       .limit(limit)
-      .sort(sortOptions),
+      .sort(sortOptions)
+      .select(selectFields),
       this.getTotalItems(filter)
     ])
     const totalPages = Math.ceil(totalItems / limit)

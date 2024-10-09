@@ -3,7 +3,15 @@ import { Transform, Type } from "class-transformer";
 import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 import { SortOrder } from "src/utils/types/sort.type";
 import { CreateUserDto } from "./create-user.dto";
-export class FilterUserDto extends PickType(CreateUserDto,["role","status"] as const) {
+import { PartialType } from "@nestjs/swagger";
+export class FilterUserDto extends PickType(PartialType(CreateUserDto),["role","status"] as const) {
+    @IsString()
+    @IsOptional()
+    keyword?: string;
+
+    @IsString()
+    @IsOptional()
+    searchBy?: string;
 }
 export class QueryUserDto extends FilterUserDto {
 
@@ -25,4 +33,8 @@ export class QueryUserDto extends FilterUserDto {
     @IsEnum(SortOrder)
     @Transform(({ value }) => value.toLowerCase())
     order?: SortOrder;
+
+    //select fields 
+    @IsOptional()
+    selectFields: string;
 }

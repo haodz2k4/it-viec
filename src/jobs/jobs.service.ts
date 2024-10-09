@@ -17,18 +17,27 @@ export class JobsService {
   }
 
   async findAll(queryJobDto: QueryJobDto) {
-    const {page = 1, limit = 30, sortBy = 'createdAt', order = 'desc'} = queryJobDto;
+    const {
+      page = 1, 
+      limit = 30, 
+      sortBy = 'createdAt', 
+      order = 'desc',
+      selectFields = ""
+    } = queryJobDto;
     const skip = (page - 1) * limit;
     //Filter 
-    const {jobType, experienceLevel} = queryJobDto;
+    const {jobType, experienceLevel, keyword, searchBy = "title"} = queryJobDto;
     const filter = filterFalsyValues({jobType, experienceLevel});
-
+    if(keyword){
+      filter[searchBy] = new RegExp(keyword,"i")
+    }
     const [products, totalItems] = await Promise.all([
     this.jobModel
       .find({...filter, deleted: false})
       .limit(limit)
       .skip(skip)
-      .sort({[sortBy]: order}),
+      .sort({[sortBy]: order})
+      .select(selectFields),
       this.getTotalDocument(filter)
     ],)
     const totalPages = Math.ceil(totalItems / limit)

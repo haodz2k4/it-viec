@@ -1,10 +1,18 @@
-import { PickType } from "@nestjs/mapped-types";
+import { PartialType, PickType } from "@nestjs/mapped-types";
 import { CreateJobDto } from "./create-job.dto";
 import { Transform, Type } from "class-transformer";
 import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 import { SortOrder } from "src/utils/types/sort.type";
 
-export class FilterJobDto extends PickType(CreateJobDto,["jobType","experienceLevel"] as const){}
+export class FilterJobDto extends PickType(PartialType(CreateJobDto),["jobType","experienceLevel"] as const){
+    @IsString()
+    @IsOptional()
+    keyword?: string;
+
+    @IsString()
+    @IsOptional()
+    searchBy?: string;
+}
 
 export class QueryJobDto extends FilterJobDto {
 
@@ -27,4 +35,8 @@ export class QueryJobDto extends FilterJobDto {
     @IsEnum(SortOrder)
     @Transform(({ value }) => value.toLowerCase())
     order?: SortOrder;
+
+    @IsString()
+    @IsOptional()
+    selectFields: string;
 }
