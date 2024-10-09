@@ -40,4 +40,9 @@ export class JobsController {
     }
   
   }
+
+  @Get('/slug/:slug')
+  findOneBySlug(@Param('slug') slug: string) {
+    return this.jobsService.findOneBySlug(slug)
+  }
 }

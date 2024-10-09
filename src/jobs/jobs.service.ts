@@ -60,7 +60,9 @@ export class JobsService {
   async findOneById(id: string) {
     return await this.jobModel.findOne({_id: id,deleted: false})
   }
-
+  async findOneBySlug(slug: string)  {
+    return await this.jobModel.findOne({slug, deleted: false})
+  }
   async update(id: string, updateJobDto: UpdateJobDto) {
     const job = await this.findOneById(id);
     if(!job){
