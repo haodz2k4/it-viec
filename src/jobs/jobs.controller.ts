@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, HttpCode, HttpStatus } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { IsValidateObjectId } from 'src/common/pipes/validation.pipe';
 
 @Controller('jobs')
 @ApiTags('jobs')
@@ -20,17 +21,22 @@ export class JobsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.jobsService.findOne(+id);
+  findOne(@Param('id', IsValidateObjectId) id: string) {
+    return this.jobsService.findOneById(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateJobDto: UpdateJobDto) {
-    return this.jobsService.update(+id, updateJobDto);
+  update(@Param('id', IsValidateObjectId) id: string, @Body() updateJobDto: UpdateJobDto) {
+    return this.jobsService.update(id, updateJobDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.jobsService.remove(+id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', IsValidateObjectId) id: string) {
+    const infoUpdate = await this.jobsService.remove(id);
+    if(infoUpdate.modifiedCount == 0){
+      throw new NotFoundException("Job is not found")
+    }
+  
   }
 }

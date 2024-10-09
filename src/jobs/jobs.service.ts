@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -13,19 +13,25 @@ export class JobsService {
     return await this.jobModel.create(createJobDto)
   }
 
-  findAll() {
-    return `This action returns all jobs`;
+  async findAll() {
+    return await this.jobModel.find({deleted: false})
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} job`;
+  async findOneById(id: string) {
+    return await this.jobModel.findOne({_id: id,deleted: false})
   }
 
-  update(id: number, updateJobDto: UpdateJobDto) {
-    return `This action updates a #${id} job`;
+  async update(id: string, updateJobDto: UpdateJobDto) {
+    const job = await this.findOneById(id);
+    if(!job){
+      throw new NotFoundException("Job is not found");
+    }
+    Object.assign(job,updateJobDto)
+    await job.save()
+    return job
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} job`;
+  async remove(id: string) {
+    return await this.jobModel.updateOne({_id: id},{deleted: true})
   }
 }
