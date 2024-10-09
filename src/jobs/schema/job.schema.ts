@@ -1,5 +1,6 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, Model } from "mongoose";
+import { Slug } from "src/utils/slug.util";
 
 
 export type jobDocument = HydratedDocument<Job>
@@ -30,6 +31,23 @@ export class Job {
 
     @Prop({enum: ['fresher', 'mid', 'senior','intern'], required: true})
     experienceLevel: string;
+
+    @Prop({unique: true, index: true})
+    slug: string
+
+    @Prop({default: false})
+    deleted: boolean
 }
 
 export const jobSchema = SchemaFactory.createForClass(Job);
+
+jobSchema.pre<jobDocument>('save',async function(next) {
+
+    if(this.isModified('title')){
+        const slug = new Slug<jobDocument>(this.title)
+        const JobModel = this.constructor as Model<jobDocument>;
+        await slug.generateUniqueSlug(JobModel)
+        this.slug = slug.getSlug()
+    }
+    next()
+})
