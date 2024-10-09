@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,6 +8,7 @@ import { User } from './schema/user.schema';
 import { QueryUserDto } from './dto/query-user.dto';
 import { UserRequest } from 'src/decorator/user.decorator';
 import { ResponseMessage } from 'src/decorator/transfrom-response.decorate';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -51,6 +52,13 @@ export class UsersController {
       throw new NotFoundException("User is not found")
     }
     return user
+  }
+
+  @Post('upload')
+  @ApiOperation({summary: 'Upload avatar'})
+  @UseInterceptors(FileInterceptor('avatar'))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
   }
 
   @Patch(':id')
