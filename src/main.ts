@@ -28,8 +28,8 @@ async function bootstrap() {
   const configService = app.get(ConfigService)
   //Swagger
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('IT VIEC')
+    .setDescription('Trang web tuyển dụng IT hàng đầu Việt Nam')
     .setVersion('1.0')
     .addTag('Users')
     .build();

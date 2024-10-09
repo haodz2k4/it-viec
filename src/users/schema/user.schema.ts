@@ -16,7 +16,7 @@ export class User {
     @Prop({required: true, minlength: 2, maxlength: 150})
     fullName: string;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @Prop()
     avatar: string;
 
@@ -28,11 +28,11 @@ export class User {
     @Prop({required: true, select: false})
     password: string;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @Prop()
     birthDate: Date
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @Prop({default: "active", enum: ["active","inactive"]})
     status: string;
 

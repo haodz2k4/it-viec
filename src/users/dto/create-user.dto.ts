@@ -9,7 +9,7 @@ export class CreateUserDto {
     fullName: string;
 
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @IsString()
     @IsUrl()
     @IsOptional()
@@ -30,19 +30,20 @@ export class CreateUserDto {
     @IsDate()
     @IsOptional()
     @Transform(({value}) => new Date(value))
-    @ApiProperty()
+    @ApiProperty({required: false})
     birthDate: Date;
 
 
     @IsString()
     @IsNotEmpty()
     @IsIn(["user","admin"])
+    @ApiProperty({ enum: ['admin', 'user'], example: 'user' })
     @ApiProperty()
     role: string;
     
     @IsString()
     @IsOptional()
     @IsIn(["active","inactive"])
-    @ApiProperty()
+    @ApiProperty({ enum: ['active', 'inactive'], example: 'active' })
     status: string;
 }

@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IsValidateObjectId } from 'src/common/pipes/validation.pipe';
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiExtraModels, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { User } from './schema/user.schema';
 import { QueryUserDto } from './dto/query-user.dto';
 import { UserRequest } from 'src/decorator/user.decorator';
@@ -12,6 +12,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Users')
 @ApiBearerAuth()
+@ApiExtraModels(QueryUserDto)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -25,8 +26,14 @@ export class UsersController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get All User' })
-  @ApiQuery({type: QueryUserDto})
+  @ApiOperation({summary: 'Get All Users'})
+  // @ApiQuery({
+  //   name: 'query',
+  //   type: QueryUserDto,
+  //   style: 'deepObject',
+  //   explode: true,
+  //   required: false,
+  // })
   getUsers(@Query() queryUserDto: QueryUserDto) {
     return this.usersService.getUsers(queryUserDto);
   }
