@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Query, UploadedFile, UseInterceptors, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -9,13 +9,14 @@ import { QueryUserDto } from './dto/query-user.dto';
 import { UserRequest } from 'src/decorator/user.decorator';
 import { ResponseMessage } from 'src/decorator/transfrom-response.decorate';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @ApiTags('Users')
 @ApiBearerAuth()
 @ApiExtraModels(QueryUserDto)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService, private cloudinary: CloudinaryService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
@@ -64,8 +65,10 @@ export class UsersController {
   @Post('upload')
   @ApiOperation({summary: 'Upload avatar'})
   @UseInterceptors(FileInterceptor('avatar'))
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    return await this.cloudinary.uploadImage(file).catch(() => {
+      throw new BadRequestException('Invalid file type.');
+    });
   }
 
   @Patch(':id')
