@@ -62,13 +62,16 @@ export class UsersController {
     return user
   }
 
-  @Post('upload')
+  @Post(':id/upload')
   @ApiOperation({summary: 'Upload avatar'})
   @UseInterceptors(FileInterceptor('avatar'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return await this.cloudinary.uploadImage(file).catch(() => {
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @Param('id', IsValidateObjectId) id: string) {
+    const path = await this.cloudinary.uploadImage(file).catch(() => {
       throw new BadRequestException('Invalid file type.');
     });
+    const updateUserDto = new UpdateUserDto();
+    updateUserDto.avatar = path.url 
+    await this.usersService.update(id,updateUserDto)
   }
 
   @Patch(':id')

@@ -39,7 +39,6 @@ export class UsersService {
     const sortOrder = order === "asc" ? 1 : -1; 
     const sortOptions: Record<string, 1 | -1> = {}
     sortOptions[sortBy] = sortOrder
-    console.log(filter)
     const [users, totalItems] = await Promise.all([
       this.userModel
       .find({...filter,deleted: false})
