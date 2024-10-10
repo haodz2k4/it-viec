@@ -26,6 +26,10 @@ async function bootstrap() {
     forbidNonWhitelisted: true, //throw error 
   }))
   const configService = app.get(ConfigService)
+  //Cors 
+  app.enableCors({
+    origin: configService.get<string>('COR_ORIGIN')
+  })
   //Swagger
   const config = new DocumentBuilder()
     .setTitle('IT VIEC')
@@ -34,7 +38,7 @@ async function bootstrap() {
     .addTag('Users')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api-docs', app, document);
   await app.listen(configService.get<string>("PORT"));
 }
 bootstrap();
