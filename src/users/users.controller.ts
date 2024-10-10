@@ -42,8 +42,8 @@ export class UsersController {
   @Get('me')
   @ApiOperation({summary: 'Get current user'})
   @ResponseMessage("Get current user")
-  async me(@UserRequest() user) {
-    return user 
+  async me(@UserRequest('sub') sub: string) {
+    return this.usersService.findOneById(sub);
   }
 
   @Get(':id')
