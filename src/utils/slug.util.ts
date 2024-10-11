@@ -16,5 +16,6 @@ export class Slug<T> {
             this.data = `${this.data}-${count}`
             count++;
         }
+        return this 
     }
 }

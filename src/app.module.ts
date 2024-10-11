@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { JobsModule } from './jobs/jobs.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { JobCategoriesModule } from './job-categories/job-categories.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}), 
@@ -22,6 +23,8 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     }),
     AuthModule,
     CloudinaryModule,
+    JobCategoriesModule,
+
   ],
   controllers: [AppController],
   providers: [AppService],
