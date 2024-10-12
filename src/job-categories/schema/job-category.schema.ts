@@ -22,6 +22,9 @@ export class JobCategory {
     @Prop({unique: true})
     slug: string;
 
+    @Prop({default: "active", enum: ["active","inactive"]})
+    status: string;
+
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: "JobCategory"})
     parentCaegory: mongoose.Schema.Types.ObjectId
 }
