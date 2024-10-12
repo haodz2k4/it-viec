@@ -1,5 +1,5 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { HydratedDocument, Model, ObjectId } from "mongoose";
+import mongoose, { HydratedDocument, Model } from "mongoose";
 import { Slug } from "src/utils/slug.util";
 
 export type JobCategoryDocument = HydratedDocument<JobCategory>;
@@ -23,7 +23,7 @@ export class JobCategory {
     slug: string;
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: "JobCategory"})
-    parentCaegory: ObjectId
+    parentCaegory: mongoose.Schema.Types.ObjectId
 }
 
 export const JobCategorySchema = SchemaFactory.createForClass(JobCategory); 
