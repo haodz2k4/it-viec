@@ -10,3 +10,8 @@ export interface IPaginationResponse {
     totalPages: number,
     currentPage: number
 }
+
+export interface DataWithPagination<T> {
+    meta: IPaginationResponse,
+    items: T
+}

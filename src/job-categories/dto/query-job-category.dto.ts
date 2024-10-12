@@ -31,13 +31,13 @@ export class QueryJobCategory extends FilterJobCategory {
 
     @IsString()
     @IsOptional()
-    sortBy: string;
+    sortBy?: string;
 
     @IsOptional()
     @IsEnum(SortOrder)
-    order: string;
+    order?: SortOrder;
 
     @IsOptional()
     @IsString()
-    selectFields: string;
+    selectFields?: string;
 }

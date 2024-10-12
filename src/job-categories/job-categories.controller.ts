@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { JobCategoriesService } from './job-categories.service';
 import { CreateJobCategoryDto } from './dto/create-job-category.dto';
 import { UpdateJobCategoryDto } from './dto/update-job-category.dto';
@@ -7,6 +7,8 @@ import { JobCategory } from './schema/job-category.schema';
 import { ResponseMessage } from 'src/decorator/transfrom-response.decorate';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/decorator/public.decorator';
+import { QueryJobCategory } from './dto/query-job-category.dto';
+import { DataWithPagination } from 'src/utils/types/pagination';
 
 @ApiTags('job-categories')
 @Controller('job-categories')
@@ -23,8 +25,8 @@ export class JobCategoriesController {
   @Get()
   @Public()
   @ResponseMessage("Find All Caetegory")
-  findAll(): Promise<JobCategory[]> {
-    return this.jobCategoriesService.findAll();
+  findAll(@Query() queryJobCategory: QueryJobCategory): Promise<DataWithPagination<JobCategory[]>>{
+    return this.jobCategoriesService.findAll(queryJobCategory);
   }
 
   @Get(':id')
