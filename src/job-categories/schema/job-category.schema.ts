@@ -26,7 +26,7 @@ export class JobCategory {
     status: string;
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: "JobCategory"})
-    parentCaegory: mongoose.Schema.Types.ObjectId
+    parentCategory: mongoose.Schema.Types.ObjectId
 }
 
 export const JobCategorySchema = SchemaFactory.createForClass(JobCategory); 

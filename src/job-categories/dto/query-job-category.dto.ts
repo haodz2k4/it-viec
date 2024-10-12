@@ -1,13 +1,15 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
 import { SortOrder } from "../../utils/types/sort.type";
+import { IsObjectId } from "src/common/validator/IsObjectId.validator";
 
 
 export class FilterJobCategory {
 
     @IsString()
     @IsOptional()
-    parentCaegory?: string;
+    @IsObjectId()
+    parentCategory?: string;
 
     @IsString()
     @IsIn(["active","inactive"])

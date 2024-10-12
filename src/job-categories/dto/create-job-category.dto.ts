@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsObjectId } from "src/common/validator/IsObjectId.validator";
 
 export class CreateJobCategoryDto {
     @IsString()
@@ -15,5 +16,6 @@ export class CreateJobCategoryDto {
 
     @IsString()
     @IsOptional()
-    parentCaegory: string;
+    @IsObjectId()
+    parentCategory: string;
 }
