@@ -3,13 +3,11 @@ import { LoginReqDto } from './dto/login-req.dto';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorator/public.decorator';
 import { ResponseMessage } from 'src/decorator/transfrom-response.decorate';
-import { LoginResDto } from './dto/login-res.dto';
 import { RegisterReqDto } from './dto/register-req.dto';
 import { CookieResponseInterceptor } from 'src/interceptors/cookie.interceptor';
 import { Response } from 'express';
 import refreshTokenDecorator from 'src/decorator/refresh-token.decorator';
-import { RefreshResDto } from './dto/refresh-res.dto';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -19,13 +17,12 @@ export class AuthController {
 
     @ApiOperation({summary: 'login'})
     @ApiBody({type: LoginReqDto})
-    @ApiResponse({type: LoginResDto})
     @Post('login')
     @HttpCode(HttpStatus.OK)
     @Public()
     @UseInterceptors(CookieResponseInterceptor)
     @ResponseMessage("Login")
-    login(@Body() loginAuthDto: LoginReqDto): Promise<LoginResDto> {
+    login(@Body() loginAuthDto: LoginReqDto) {
         const {email, password} = loginAuthDto;
         return this.authService.login(email, password);
     }
@@ -43,10 +40,9 @@ export class AuthController {
     @Post('refresh-token')
     @Public()
     @ApiOperation({summary: 'refresh token'})
-    @ApiResponse({type: RefreshResDto})
     @UseInterceptors(CookieResponseInterceptor)
     @HttpCode(HttpStatus.OK)
-    refreshToken(@refreshTokenDecorator() refreshToken: string):Promise<RefreshResDto> {
+    refreshToken(@refreshTokenDecorator() refreshToken: string) {
         return this.authService.refreshToken(refreshToken)
     }
 

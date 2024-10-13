@@ -11,7 +11,3 @@ export interface IPaginationResponse {
     currentPage: number
 }
 
-export interface DataWithPagination<T> {
-    meta: IPaginationResponse,
-    items: T
-}

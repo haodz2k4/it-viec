@@ -1,3 +1,4 @@
+import sortUtils from 'src/utils/sort';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -36,15 +37,13 @@ export class UsersService {
     //Skip
     const skip = (page - 1) * limit;
     //Sort Order
-    const sortOrder = order === "asc" ? 1 : -1; 
-    const sortOptions: Record<string, 1 | -1> = {}
-    sortOptions[sortBy] = sortOrder
+    const sort = sortUtils(sortBy, order)
     const [users, totalItems] = await Promise.all([
       this.userModel
       .find({...filter,deleted: false})
       .skip(skip)
       .limit(limit)
-      .sort(sortOptions)
+      .sort(sort)
       .select(selectFields),
       this.getTotalItems(filter)
     ])

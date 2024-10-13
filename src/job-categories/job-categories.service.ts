@@ -8,15 +8,15 @@ import { FilterJobCategory, QueryJobCategory } from './dto/query-job-category.dt
 import { SortOrder } from 'src/utils/types/sort.type';
 import sortUtils from "../utils/sort";
 import { filterFalsyValues } from 'src/utils/filter-obj.util';
-import { DataWithPagination, IPaginationResponse } from 'src/utils/types/pagination';
+import { IPaginationResponse } from 'src/utils/types/pagination';
 @Injectable()
 export class JobCategoriesService {
   constructor(@InjectModel(JobCategory.name) private jobCategoryModel: Model<JobCategory>) {}
-  create(createJobCategoryDto: CreateJobCategoryDto):Promise<JobCategory> {
+  create(createJobCategoryDto: CreateJobCategoryDto) {
     return this.jobCategoryModel.create(createJobCategoryDto);
   }
 
-  async findAll(queryJobCategory: QueryJobCategory): Promise<DataWithPagination<JobCategory[]>> {
+  async findAll(queryJobCategory: QueryJobCategory) {
     
     const {
       parentCategory,

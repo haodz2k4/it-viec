@@ -1,8 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
-import { LoginResDto } from './dto/login-res.dto';
-import { TokenResDto } from './dto/token-res.dto';
 import { ConfigService } from '@nestjs/config';
 import { RegisterReqDto } from './dto/register-req.dto';
 
@@ -15,7 +13,7 @@ export class AuthService {
         private configService: ConfigService
     ) {}
     //Login 
-    async login(email: string, password: string): Promise<LoginResDto> {
+    async login(email: string, password: string) {
         const user = await this.userService.findOneByEmail(email);
         if(!user || !user.isMatchPassword(password)){
             throw new UnauthorizedException("Invalid email or password");
@@ -32,7 +30,7 @@ export class AuthService {
     }
     
     //refreshToken 
-    async refreshToken(refreshToken: string): Promise<TokenResDto>  {
+    async refreshToken(refreshToken: string){
         const {sub, email, role, fullName} = await this.verifyRefreshToken(refreshToken);
         const isValid = await this.isValidRefreshToken({sub, email, role, fullName}, refreshToken);
         if(!isValid){
@@ -42,7 +40,7 @@ export class AuthService {
         return token
 
     }
-    async verifyRefreshToken(refreshToken: string):Promise<any> {
+    async verifyRefreshToken(refreshToken: string) {
         try {
             return await this.jwtService.verifyAsync(refreshToken,{
                 secret: this.configService.get<string>('JWT_REFRESH_SECRET')
@@ -57,7 +55,7 @@ export class AuthService {
         return (user != null && user.refreshToken === refreshToken);
     }
     
-    async generateAuthToken(payload: any): Promise<TokenResDto> {
+    async generateAuthToken(payload: any) {
         return {
             access_token: await this.jwtService.signAsync(payload),
             refresh_token: await this.jwtService.signAsync(payload,{
