@@ -1,4 +1,4 @@
-import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
+import { Schema, Prop, SchemaFactory, raw } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
 
 export type companyDocument = HydratedDocument<Company>;
@@ -14,8 +14,12 @@ export class Company {
     @Prop()
     logo: string;
 
-    @Prop()
-    address: string;
+    @Prop(raw({
+        street: String,
+        city: String,
+        country: String
+    }))
+    address: Record<string, any>;
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);
