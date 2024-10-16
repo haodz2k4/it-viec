@@ -31,13 +31,13 @@ export class JobCategoriesService {
     const sort = sortUtils(sortBy, order)
     const filter = filterFalsyValues({parentCategory, status})
     const [jobCategories, totalItems] = await Promise.all([
-      await this.jobCategoryModel
+      this.jobCategoryModel
         .find(filter)
         .limit(limit)
         .skip(skip)
         .sort(sort)
         .select(selectFields),
-      await this.getTotalDocument()
+      this.getTotalDocument(filter)
     ])
     const totalPages = Math.ceil(totalItems / limit)
     const pagination: IPaginationResponse = {
