@@ -20,6 +20,9 @@ export class Company {
         country: String
     }))
     address: Record<string, any>;
+
+    @Prop({default: false})
+    deleted: boolean
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);
