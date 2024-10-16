@@ -9,8 +9,8 @@ import { Model } from 'mongoose';
 export class CompaniesService {
 
   constructor(@InjectModel(Company.name) private companyModel: Model<Company>) {}
-  create(createCompanyDto: CreateCompanyDto) {
-    return 'This action adds a new company';
+  async create(createCompanyDto: CreateCompanyDto) {
+    return await this.companyModel.create(createCompanyDto)
   }
 
   findAll() {
