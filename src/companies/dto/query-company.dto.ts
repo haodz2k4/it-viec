@@ -2,7 +2,22 @@ import { Type } from "class-transformer";
 import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 import { SortOrder } from "src/utils/types/sort.type";
 
-export class QueryCompanyDto {
+export class FilterCompanyDto {
+    @IsString()
+    @IsOptional()
+    keyword?: string;
+
+
+}
+export class QueryCompanyDto extends FilterCompanyDto {
+
+    @IsString()
+    @IsOptional()
+    keyword?: string;
+
+    @IsString()
+    @IsOptional()
+    searchBy?: string;
 
     @Type(() => Number)
     @IsOptional()

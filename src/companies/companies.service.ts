@@ -4,7 +4,7 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Company } from './schema/company.schema';
 import { Model } from 'mongoose';
-import { QueryCompanyDto } from './dto/query-company.dto';
+import { FilterCompanyDto, QueryCompanyDto } from './dto/query-company.dto';
 import { IPaginationResponse } from 'src/utils/types/pagination';
 import { SortOrder } from 'src/utils/types/sort.type';
 import { query } from 'express';
@@ -18,21 +18,26 @@ export class CompaniesService {
 
   async findAll(queryCompanyDto: QueryCompanyDto = {}) {
     const {
+      keyword,
+      searchBy = "name",
       page = 1,
       limit = 5,
       sortBy = "createdAt",
       order = SortOrder.DESC,
       selectField = ""
     } = queryCompanyDto
-    console.log(queryCompanyDto)
+    const filter: Record<string, any> = {}
+    if(keyword) {
+      filter[searchBy] = new RegExp(keyword,"i")
+    }
     const skip = (page - 1) * limit
     const [companies, total] = await Promise.all([
       this.companyModel
-        .find({deleted: false})
+        .find({...filter, deleted: false})
         .sort({[sortBy]: order})
         .skip(skip)
         .select(selectField),
-      this.companyModel.countDocuments({deleted: false})
+      this.getTotalDocument(filter)
     ])
     const totalPages = Math.ceil(total / limit);
     const meta: IPaginationResponse = {
@@ -43,6 +48,10 @@ export class CompaniesService {
       currentPage: page
     }
     return {items: companies, meta}
+  }
+
+  async getTotalDocument(filter?: FilterCompanyDto): Promise<number> {
+    return await this.companyModel.countDocuments({...filter, deleted: false})
   }
 
   async findOne(id: string) {

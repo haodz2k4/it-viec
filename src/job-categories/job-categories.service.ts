@@ -21,6 +21,8 @@ export class JobCategoriesService {
     const {
       parentCategory,
       status,
+      keyword,
+      searchBy = "categoryName",
       page = 1,
       limit = 20,
       sortBy = 'createdAt',
@@ -29,7 +31,11 @@ export class JobCategoriesService {
     } = queryJobCategory;
     const skip = (page - 1) * limit;
     const sort = sortUtils(sortBy, order)
-    const filter = filterFalsyValues({parentCategory, status})
+    const filter: Record<string, any> = filterFalsyValues({parentCategory, status})
+    //seach 
+    if(keyword){
+      filter[searchBy] = new RegExp(keyword,"i")
+    }
     const [jobCategories, totalItems] = await Promise.all([
       this.jobCategoryModel
         .find(filter)

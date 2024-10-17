@@ -15,6 +15,14 @@ export class FilterJobCategory {
     @IsIn(["active","inactive"])
     @IsOptional()
     status?: string;
+
+    @IsString()
+    @IsOptional()
+    keyword?: string;
+
+    @IsString()
+    @IsOptional()
+    searchBy?: string;
 }
 
 export class QueryJobCategory extends FilterJobCategory {
