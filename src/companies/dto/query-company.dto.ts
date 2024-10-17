@@ -4,26 +4,26 @@ import { SortOrder } from "src/utils/types/sort.type";
 
 export class QueryCompanyDto {
 
-    @IsOptional()
     @Type(() => Number)
+    @IsOptional()
     @IsNumber()
-    page: number;
+    page?: number;
 
-    @IsOptional()
     @Type(() => Number)
+    @IsOptional()
     @IsNumber()
-    limit: number;
+    limit?: number;
 
     @IsOptional()
     @IsString()
-    sortBy: string;
+    sortBy?: string;
 
     @IsOptional()
     @IsEnum(SortOrder)
-    order: SortOrder;
+    order?: SortOrder;
 
     @IsString()
     @IsOptional()
-    selectField: string;
+    selectField?: string;
 
 }

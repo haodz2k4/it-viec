@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, Query } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { QueryCompanyDto } from './dto/query-company.dto';
 
 @Controller('companies')
 @ApiTags('companies')
@@ -15,8 +16,8 @@ export class CompaniesController {
   }
 
   @Get()
-  findAll() {
-    return this.companiesService.findAll();
+  findAll(@Query() queryCompanyDto: QueryCompanyDto) {
+    return this.companiesService.findAll(queryCompanyDto);
   }
 
   @Get(':id')
