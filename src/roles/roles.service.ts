@@ -24,14 +24,18 @@ export class RolesService {
   async update(id: string, updateRoleDto: UpdateRoleDto) {
     const role = await this.findOne(id);
     if(!role){
-      throw new NotFoundException("User is not found")
+      throw new NotFoundException("Role is not found")
     }
     Object.assign(role, updateRoleDto)
     await role.save()
     return role
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
+  async remove(id: string) {
+    const role = await this.roleModel.findOneAndUpdate({_id: id}, {deleted: true});
+    if(!role){
+      throw new NotFoundException("Role is not found")
+    }
+    
   }
 }
