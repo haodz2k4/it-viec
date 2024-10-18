@@ -10,6 +10,7 @@ import { JobsModule } from './jobs/jobs.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { JobCategoriesModule } from './job-categories/job-categories.module';
 import { CompaniesModule } from './companies/companies.module';
+import { RolesModule } from './roles/roles.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}), 
@@ -26,6 +27,7 @@ import { CompaniesModule } from './companies/companies.module';
     CloudinaryModule,
     JobCategoriesModule,
     CompaniesModule,
+    RolesModule,
 
   ],
   controllers: [AppController],
