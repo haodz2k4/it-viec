@@ -8,7 +8,7 @@ export class CreateRoleDto {
     title: string;
 
     @IsString()
-    @IsOptional()
+    @IsOptional() 
     description: string;
 
     @IsString()

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -8,21 +8,27 @@ import { Model } from 'mongoose';
 @Injectable()
 export class RolesService {
 
-  constructor(@InjectModel(Role.name) private role: Model<Role> ) {}
-  create(createRoleDto: CreateRoleDto) {
-    return 'This action adds a new role';
+  constructor(@InjectModel(Role.name) private roleModel: Model<Role> ) {}
+  async create(createRoleDto: CreateRoleDto) {
+    return await this.roleModel.create(createRoleDto)
   }
 
-  findAll() {
-    return `This action returns all roles`;
+  async findAll() {
+    return await this.roleModel.find({deleted: false})
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
+  async findOne(id: string) {
+    return await this.roleModel.findOne({_id: id, deleted: false})
   }
 
-  update(id: number, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`;
+  async update(id: string, updateRoleDto: UpdateRoleDto) {
+    const role = await this.findOne(id);
+    if(!role){
+      throw new NotFoundException("User is not found")
+    }
+    Object.assign(role, updateRoleDto)
+    await role.save()
+    return role
   }
 
   remove(id: number) {
