@@ -16,6 +16,9 @@ export class Role {
     @Prop({type: [String], default: []})
     permissions: string[]
 
+    @Prop({default: "active"})
+    status: string;
+    
     @Prop({
         default: false
     })
