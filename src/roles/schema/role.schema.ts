@@ -1,5 +1,5 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import mongoose, { HydratedDocument } from "mongoose";
 
 export type roleDocument = HydratedDocument<Role>;
 @Schema({
@@ -13,8 +13,8 @@ export class Role {
     @Prop()
     description: string;
 
-    @Prop({type: [String], default: []})
-    permissions: string[]
+    @Prop({type: [mongoose.Schema.Types.ObjectId], default: []})
+    permissions: mongoose.Schema.Types.ObjectId[]
 
     @Prop({default: "active"})
     status: string;
