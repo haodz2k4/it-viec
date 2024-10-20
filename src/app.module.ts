@@ -12,6 +12,7 @@ import { JobCategoriesModule } from './job-categories/job-categories.module';
 import { CompaniesModule } from './companies/companies.module';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
+import { DatabasesModule } from './databases/databases.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}), 
@@ -30,6 +31,7 @@ import { PermissionsModule } from './permissions/permissions.module';
     CompaniesModule,
     RolesModule,
     PermissionsModule,
+    DatabasesModule,
 
   ],
   controllers: [AppController],
