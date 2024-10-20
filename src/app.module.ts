@@ -11,6 +11,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { JobCategoriesModule } from './job-categories/job-categories.module';
 import { CompaniesModule } from './companies/companies.module';
 import { RolesModule } from './roles/roles.module';
+import { PermissionsModule } from './permissions/permissions.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}), 
@@ -28,6 +29,7 @@ import { RolesModule } from './roles/roles.module';
     JobCategoriesModule,
     CompaniesModule,
     RolesModule,
+    PermissionsModule,
 
   ],
   controllers: [AppController],
