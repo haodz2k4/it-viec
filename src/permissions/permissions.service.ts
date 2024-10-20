@@ -1,30 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Permission } from './schemas/permission.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class PermissionsService {
 
-  constructor(@InjectModel(Permission.name) private permission: Permission) {}
-  create(createPermissionDto: CreatePermissionDto) {
-    return 'This action adds a new permission';
+  constructor(@InjectModel(Permission.name) private permission: Model<Permission>) {}
+  async create(createPermissionDto: CreatePermissionDto) {
+    return await this.permission.create(createPermissionDto)
   }
 
-  findAll() {
-    return `This action returns all permissions`;
+  async findAll() {
+    return await this.permission.find({deleted: false})
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} permission`;
+  async findOneById(id: string) {
+    return await this.permission.findOne({_id: id, deleted: false})
   }
 
-  update(id: number, updatePermissionDto: UpdatePermissionDto) {
-    return `This action updates a #${id} permission`;
+  async update(id: string, updatePermissionDto: UpdatePermissionDto) {
+    const permission = await this.findOneById(id);
+    if(!permission){
+      throw new NotFoundException("Permissions is not found")
+    }
+    Object.assign(permission, updatePermissionDto);
+    await permission.save()
+    return permission
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} permission`;
+  async remove(id: string) {
+    const permission = await this.permission.findByIdAndUpdate(id,{deleted: true});
+    if(!permission){
+      throw new NotFoundException("Permission is not found")
+    }
+    
   }
 }

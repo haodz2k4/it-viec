@@ -16,6 +16,9 @@ export class Permission {
 
     @Prop({required: true})
     module: string;
+
+    @Prop({default: true})
+    deleted: boolean
     
 }
 
